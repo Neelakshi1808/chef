@@ -137,6 +137,7 @@ class Chef
         Chef::Log.info("Run List expands to [#{run_list_with_versions_for_display.join(', ')}]")
 
         events.node_load_completed(node, run_list_with_versions_for_display, Chef::Config)
+        events.run_list_expanded(run_list_with_versions_for_display)
 
         node
       rescue Exception => e

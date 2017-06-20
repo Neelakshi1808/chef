@@ -330,6 +330,34 @@ describe Chef::PolicyBuilder::Policyfile do
 
       end
 
+      describe "#build_node" do
+
+        let(:node) do
+          node = Chef::Node.new
+          node.name(node_name)
+          node
+        end
+
+        before do
+          allow(policy_builder).to receive(:node).and_return(node)
+        end
+
+        context "when the run is successful" do
+          let(:expanded_run_list) { ["test::default@0.1.0 (9a156f6)",
+                                     "test::other@0.1.0 (ae23e31)"] }
+
+          before do
+            allow(policy_builder).to receive(:run_list_with_versions_for_display)
+                                      .and_return(expanded_run_list)
+          end
+
+          it "sends the run_list_expanded event" do
+            expect(events).to receive(:run_list_expanded).with(expanded_run_list)
+            policy_builder.build_node
+          end
+        end
+      end
+
       describe "building the node object" do
 
         let(:extra_chef_config) { {} }
